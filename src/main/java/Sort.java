@@ -1,3 +1,5 @@
+import java.util.Random;
+
 public class Sort {
     private static boolean less(Comparable v, Comparable w) {return v.compareTo(w) < 0;}
 
@@ -41,12 +43,34 @@ public class Sort {
         }
     }
 
+    //希尔排序,也称缩小增量排序,
+    //动画地址http://www.atool.org/sort.php
+    private static void Shell(Comparable[] a) {
+        int N = a.length;
+        int h = 1;
+        while (h < N / 3) h = 3*h + 1;
+
+        while (h >= 1) {  // 将数组变为h有序
+            for (int i = h; i < N; i++){  // 将a[i]插入到a[i - h], a[i - 2h], a[i - 3h]...之中
+                //System.out.println(i);
+                for (int j = i; j >= h && less(a[j], a[j - h]); j -= h) {
+                    //System.out.println(h+"========"+i + "---------" + (j - h));
+                    exch(a, j, j - h);
+                }
+            }
+            h = h / 3;
+        }
+    }
+
     public static void main(String[] args){
-        Integer[] a = new Integer[3];
-        a[0] = 1;
-        a[1] = 0;
-        a[2] = 3;
-        Insertion(a);
+        int len = 20;
+        Integer[] a = new Integer[len];
+        Random random = new Random();
+        for (int x = 0; x < len; x++) {
+           a[x] = random.nextInt(100);
+        }
+        System.out.println(a);
+        Shell(a);
         assert isSorted(a);
         show(a);
     }
