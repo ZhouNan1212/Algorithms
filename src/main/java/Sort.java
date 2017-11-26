@@ -86,9 +86,7 @@ public class Sort {
             }
         }
 
-        /*
-         * 自顶向下的归并
-         */
+
         private void sort(Comparable[] a, int lo, int hi){  // 递归的形式
             if (hi <= lo) return;
             int mid = lo + (hi - lo) / 2;
@@ -97,10 +95,28 @@ public class Sort {
             merge(a, lo, mid, hi);  // 归并结果
         }
 
-        private void mergeSort(Comparable[] a){
+        /*
+         * 自顶向下的归并
+         */
+        private void upToDownMergeSort(Comparable[] a){
             aux = new Comparable[a.length];
             sort(a, 0, a.length - 1);
         }
+
+        /*
+         * 自底向上的归并
+         */
+        private void downToUpMergeSort(Comparable[] a){
+            int length = a.length;
+            aux = new Comparable[length];
+            for (int sz = 1; sz < length; sz += sz){
+                for (int lo = 0; lo < length - sz; lo += sz + sz) {
+                    merge(a, lo, lo + sz - 1, Math.min(lo + sz + sz - 1, length - 1));
+                }
+            }
+        }
+
+
     }
 
 
@@ -113,7 +129,7 @@ public class Sort {
            System.out.print(a[x] + ", ");
         }
         Merge merge = new Merge();
-        merge.mergeSort(a);
+        merge.downToUpMergeSort(a);
         assert isSorted(a);
         System.out.println();
         show(a);
