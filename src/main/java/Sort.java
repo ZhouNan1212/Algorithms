@@ -62,16 +62,60 @@ public class Sort {
         }
     }
 
+
+    private static class Merge{
+        private Comparable[] aux;  // 归并所需的辅助数组
+
+        /*
+         *原地归并的抽象方法
+         */
+        private void merge(Comparable[] a, int lo, int mid, int hi) {// 将a[lo...mid] 和a[mid+1...hi]归并
+            int i = lo, j = mid + 1;
+            System.arraycopy(a, lo, aux, lo, hi - lo + 1);
+            //for (int k = lo; k <= hi; k++)
+            //    aux[k] = a[k];
+            /*
+             * arraycopy(Object src, int srcPos, Object dest, int destPos, int length)
+             * src表示源数组，srcPos表示源数组要复制的起始位置，desc表示目标数组，length表示要复制的长度。
+             */
+            for (int k = lo; k <= hi; k++) {
+                if      (i > mid)                a[k] = aux[j++];  // 左半边的用尽（取右半边元素）
+                else if (j > hi )                a[k] = aux[i++];  // 右半边的用尽（取左半边元素）
+                else if (less(aux[j], aux[i]))   a[k] = aux[j++];  // 右半边的当前元素小于左半边的当前元素（取右半边元素）
+                else                             a[k] = aux[i++];  // 右半边的当前元素大于左半边的当前元素（取左半边元素）
+            }
+        }
+
+        /*
+         * 自顶向下的归并
+         */
+        private void sort(Comparable[] a, int lo, int hi){  // 递归的形式
+            if (hi <= lo) return;
+            int mid = lo + (hi - lo) / 2;
+            sort(a, lo, mid);  // 将左半边排序
+            sort(a, mid + 1, hi);  // 将右半边排序
+            merge(a, lo, mid, hi);  // 归并结果
+        }
+
+        private void mergeSort(Comparable[] a){
+            aux = new Comparable[a.length];
+            sort(a, 0, a.length - 1);
+        }
+    }
+
+
     public static void main(String[] args){
-        int len = 20;
+        int len = 10;
         Integer[] a = new Integer[len];
         Random random = new Random();
         for (int x = 0; x < len; x++) {
            a[x] = random.nextInt(100);
+           System.out.print(a[x] + ", ");
         }
-        System.out.println(a);
-        Shell(a);
+        Merge merge = new Merge();
+        merge.mergeSort(a);
         assert isSorted(a);
+        System.out.println();
         show(a);
     }
 
