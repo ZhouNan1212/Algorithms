@@ -63,6 +63,19 @@ public class Sort {
         }
     }
 
+    //冒泡排序
+    private static void Bubble(Comparable[] a) {
+        int N = a.length;
+        while (N > 0) {
+            int h = 0;
+            while (h < N - 1) {
+                if (less(a[h + 1], a[h])) exch(a, h, h + 1);  // 如果a[h + 1] < a[h], 就交换两个元素
+                h += 1;
+            }
+            N -= 1;
+        }
+    }
+
 
     private static class Merge{
         private Comparable[] aux;  // 归并所需的辅助数组
@@ -119,7 +132,7 @@ public class Sort {
     }
 
     private static class Quick {
-        public void quickSort(Comparable[] a) {
+        private void quickSort(Comparable[] a) {
             //Collections.shuffle(a);
             sort(a, 0, a.length - 1);
         }
@@ -154,12 +167,12 @@ public class Sort {
            a[x] = random.nextInt(100);
            System.out.print(a[x] + ", ");
         }
-        Quick quick = new Quick();
-        quick.quickSort(a);
+//        Quick quick = new Quick();
+//        quick.quickSort(a);
+
+        Bubble(a);
         assert isSorted(a);
         System.out.println();
         show(a);
     }
-
-
 }
