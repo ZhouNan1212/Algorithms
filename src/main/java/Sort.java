@@ -1,5 +1,5 @@
 import java.util.Random;
-import java.util.Collections;
+import java.util.PriorityQueue;
 
 public class Sort {
     private static boolean less(Comparable v, Comparable w) {return v.compareTo(w) < 0;}
