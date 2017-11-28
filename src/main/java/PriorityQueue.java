@@ -56,7 +56,7 @@ public class PriorityQueue {
             maxPriorityQueue.insert(random.nextInt(100));
         }
         while (maxPriorityQueue.size() > 0) {
-            System.out.println(maxPriorityQueue.deleteMax());
+            System.out.println(maxPriorityQueue.deleteMax()+ "------" + maxPriorityQueue.size());
         }
     }
 }
