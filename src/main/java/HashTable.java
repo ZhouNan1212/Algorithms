@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Random;
 public class HashTable {
     private static class SequentialSearchST<Key, Value> {  // 无序链表的顺序查找
@@ -33,6 +34,14 @@ public class HashTable {
             first = new Node(key, value, first); //未命中，新建节点
         }
 
+        private ArrayList<Key> keys() {
+            ArrayList<Key> keys = new ArrayList<>();
+            for (Node x = first; x != null; x = x.next) {
+                keys.add(x.key);
+            }
+            return keys;
+        }
+
     }
 
     private static class SeparateChainingHashST<Key, Value>{
@@ -58,13 +67,31 @@ public class HashTable {
 
     }
 
+    private class LinearProbingHashST<Key, Value> {
+        private int N;
+        private int M = 16;
+        private Key[] keys;
+        private Value[] values;
+
+        private LinearProbingHashST(){
+            keys = (Key[]) new Object[M];
+            values = (Value[]) new Object[M];
+        }
+
+        private int hash(Key key) {return (key.hashCode() & 0xfffffff) % M; }
+
+        private void resize() {}
+    }
+
     public static void main(String[] args){
         SeparateChainingHashST separateChainingHashST = new SeparateChainingHashST();
+
         Random random = new Random();
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 100; i++) {
             int key = random.nextInt(100), value =  random.nextInt(10);
             separateChainingHashST.put(key, value);
-            System.out.println(separateChainingHashST.get(key));
+            //System.out.println(separateChainingHashST.get(key));
         }
+
     }
 }
