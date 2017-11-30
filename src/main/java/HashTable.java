@@ -1,4 +1,6 @@
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Random;
 public class HashTable {
     private static class SequentialSearchST<Key, Value> {  // 无序链表的顺序查找
@@ -44,6 +46,72 @@ public class HashTable {
 
     }
 
+    private static class BinarySearchST<Key extends Comparable<Key>, Value> {
+        private Key[] keys;
+        private Value[] values;
+        private int N;
+
+        private BinarySearchST(int capacity) {
+            keys = (Key[]) new Comparable[capacity];
+            values = (Value[]) new Comparable[capacity];
+        }
+
+        private int size() {return N;}
+
+        private boolean isEmpty(){
+            return N == 0;
+        }
+
+        private Value get(Key key) {
+            if (isEmpty()) return null;
+            int i = rank(key);
+            if (i < N && keys[i].compareTo(key) == 0) return values[i];
+            else                                      return null;
+        }
+
+        private int rank(Key key) {
+            int lo = 0, hi = N - 1;
+            while (lo <= hi) {
+                int mid = lo + (hi - lo) / 2;
+                int cmp = key.compareTo(keys[mid]);
+                if      (cmp < 0) hi = mid - 1;
+                else if (cmp > 0) lo = mid + 1;
+                else return mid;
+            }
+            return lo;
+        }
+
+        private void put(Key key, Value value) { //查找键，找到则跟新键值，否则创建新元素
+            int i = rank(key);
+            if (i < N && keys[i].compareTo(key) == 0) { values[i] = value; return;}
+            for (int j = N; j > i; j--) {
+                keys[j] = keys[j - 1];
+                values[i] = value;
+            }
+            keys[i] = key; values[i] = value;
+            N++;
+        }
+
+        private Key min() {return keys[0];}
+
+        private Key max() {return keys[N - 1];}
+
+        private Key select(int k) {return keys[k];}
+
+        private Key ceiling(Key key) {int i = rank(key); return keys[i];}
+
+        private Iterable<Key> keys(Key lo, Key hi) {
+            Queue<Key> q = new LinkedList<Key>();
+            for (int i = rank(lo); i < rank(hi); i++) { q.add(keys[i]); }
+            if (contains(hi)) q.add(keys[rank(hi)]);
+            return q;
+        }
+
+        private boolean contains(Key hi) {  //判断是否包含键hi
+            return get(hi) != null;
+        }
+    }
+
     private static class SeparateChainingHashST<Key, Value>{
         private int N; //键值对总数
         private int M; //散列表大小
@@ -84,13 +152,13 @@ public class HashTable {
     }
 
     public static void main(String[] args){
-        SeparateChainingHashST separateChainingHashST = new SeparateChainingHashST();
+        BinarySearchST binarySearchST = new BinarySearchST(100);
 
         Random random = new Random();
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 500; i++) {
             int key = random.nextInt(100), value =  random.nextInt(10);
-            separateChainingHashST.put(key, value);
-            //System.out.println(separateChainingHashST.get(key));
+            binarySearchST.put(key, value);
+            System.out.println(binarySearchST.get(key));
         }
 
     }
