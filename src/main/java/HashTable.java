@@ -1,7 +1,5 @@
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.Random;
+import java.util.*;
+
 public class HashTable {
     private static class SequentialSearchST<Key, Value> {  // 无序链表的顺序查找
         private Node first; //链表首节点
@@ -135,6 +133,58 @@ public class HashTable {
 
     }
 
+    private class BST<Key extends Comparable<Key>, Value> {
+        private Node root;
+
+        private class Node {
+            private Key key;
+            private Value value;
+            private Node left, right;
+            private int N; // 以该节点为根的子树中的节点总数
+
+            private Node(Key key, Value value, int N) {
+                this.key = key;
+                this.value = value;
+                this.N = N;
+            }
+        }
+
+        private int size() {return size(root);}
+
+        private int size(Node x) {
+            if (x == null) return 0;
+            else           return x.N;
+        }
+
+        private Value get(Key key) {return get(root, key);}
+
+        private Value get(Node x, Key key) {
+            if (x == null) return null;
+            int cmp = key.compareTo(x.key);
+            if      (cmp < 0) return get(x.left, key);
+            else if (cmp > 0) return get(x.right, key);
+            else return x.value;
+        }
+
+        private void put(Key key, Value value) {
+            root = put(root, key, value); // 查找key。找到则跟新它的值，否则为它新创建一个节点
+        }
+
+        private Node put(Node x, Key key, Value value) {
+            if (x == null) return new Node(key, value, 1);
+            int cmp = key.compareTo(x.key);
+            if      (cmp < 0) x.left = put(x.left, key, value);
+            else if (cmp > 0) x.right = put(x.right, key, value);
+            else x.value = value;
+            x.N = size(x.left) + size(x.right) + 1;
+            return x;
+        }
+
+    }
+
+
+
+
     private class LinearProbingHashST<Key, Value> {
         private int N;
         private int M = 16;
@@ -153,13 +203,24 @@ public class HashTable {
 
     public static void main(String[] args){
         BinarySearchST binarySearchST = new BinarySearchST(100);
+        Stack stack = new Stack();
+        stack.push(1);
+        stack.push(2);
+        stack.push(3);
+        System.out.println(stack.peek());
+        System.out.println(stack.get(1));
 
-        Random random = new Random();
-        for (int i = 0; i < 500; i++) {
-            int key = random.nextInt(100), value =  random.nextInt(10);
-            binarySearchST.put(key, value);
-            System.out.println(binarySearchST.get(key));
-        }
+//        int a = new Integer(1);
+//        int b = new Integer(1);
+
+
+
+//        Random random = new Random();
+//        for (int i = 0; i < 500; i++) {
+//            int key = random.nextInt(100), value =  random.nextInt(10);
+//            binarySearchST.put(key, value);
+//            System.out.println(binarySearchST.get(key));
+//        }
 
     }
 }
